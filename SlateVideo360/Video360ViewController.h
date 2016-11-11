@@ -12,4 +12,6 @@
 
 @interface Video360ViewController : HTY360PlayerVC
 
+- (void)reAnchorToDegree:(float)degree;
+
 @end
