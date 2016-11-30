@@ -29,19 +29,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)];
-    [self.view addGestureRecognizer:tap];
     [self configureCardboardButton];
 }
 
 - (void)reAnchorToDegree:(float)degree {
-    [self.glkViewController reAnchorToDegree:45];
-    [_cardboardVC.videoRenderer reAnchorToDegree:45];
-}
-
-- (void)tap {
-    [self.glkViewController reAnchorToDegree:45];
-    [_cardboardVC.videoRenderer reAnchorToDegree:45];
+    [self.glkViewController reAnchorToDegree:degree];
+    [_cardboardVC.videoRenderer reAnchorToDegree:degree];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -100,13 +93,13 @@
 - (void)configureCardboardView
 {
     _cardboardVC = [[CardboardViewController alloc] init];
-    
+
     _cardboardVC.videoPlayerController = self;
-    
+
     [self.view insertSubview:_cardboardVC.view belowSubview:self.playerControlBackgroundView];
     [self addChildViewController:_cardboardVC];
     [_cardboardVC didMoveToParentViewController:self];
-    
+
     _cardboardVC.view.frame = self.view.bounds;
 }
 
