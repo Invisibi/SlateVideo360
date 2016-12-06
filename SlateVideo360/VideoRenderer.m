@@ -82,7 +82,7 @@ GLint my_uniforms[NUM_UNIFORMS];
 @implementation VideoRenderer
 
 - (void)reAnchorToDegree:(float)degree {
-    _fingerRotationX = currentYaw - degree;
+    _fingerRotationX = currentYaw + degree * M_PI / 180;
 }
 
 - (instancetype)init
