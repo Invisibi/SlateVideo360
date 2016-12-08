@@ -24,5 +24,5 @@
 - (void)drawEyeWithEye:(CBDEye *)eye;
 - (void)finishFrameWithViewportRect:(CGRect)viewPort;
 
-- (void)reAnchorToDegree:(float)degree;
+- (void)reAnchorToDegree:(float)degree isAnimated:(BOOL)isAnimated;
 @end

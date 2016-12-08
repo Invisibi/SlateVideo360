@@ -32,9 +32,9 @@
     [self configureCardboardButton];
 }
 
-- (void)reAnchorToDegree:(float)degree {
-    [self.glkViewController reAnchorToDegree:degree];
-    [_cardboardVC.videoRenderer reAnchorToDegree:degree];
+- (void)reAnchorToDegree:(float)degree isAnimated:(BOOL)isAnimated {
+    [self.glkViewController reAnchorToDegree:degree isAnimated:isAnimated];
+    [_cardboardVC.videoRenderer reAnchorToDegree:degree isAnimated:isAnimated];
 }
 
 - (void)viewWillAppear:(BOOL)animated

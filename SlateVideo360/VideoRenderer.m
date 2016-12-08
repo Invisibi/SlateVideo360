@@ -61,6 +61,7 @@ GLint my_uniforms[NUM_UNIFORMS];
     GLuint _vertexTexCoordAttributeIndex;
 
     float currentYaw;
+    float deltaYaw;
     float _fingerRotationX;
     float _fingerRotationY;
     float _savedGyroRotationX;
@@ -76,13 +77,43 @@ GLint my_uniforms[NUM_UNIFORMS];
 }
 
 @property (strong, nonatomic) GLProgram *program;
+@property (nonatomic) BOOL isAnimating;
 
 @end
 
 @implementation VideoRenderer
 
-- (void)reAnchorToDegree:(float)degree {
-    _fingerRotationX = currentYaw + degree * M_PI / 180;
+- (void)reAnchorToDegree:(float)degree isAnimated:(BOOL)isAnimated {
+    __weak CGFloat lastDeltaYaw = deltaYaw;
+    __weak CGFloat endYaw = currentYaw + degree * M_PI / 180;
+    if (isAnimated) {
+        if (endYaw - lastDeltaYaw > M_PI) {
+            endYaw -= 2 * M_PI;
+        } else if (endYaw - lastDeltaYaw < -M_PI) {
+            endYaw += 2 * M_PI;
+        }
+        __weak typeof(self) weakSelf = self;
+        if (!self.isAnimating) {
+            NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.005 repeats:YES block:^(NSTimer * _Nonnull timer) {
+                weakSelf.isAnimating = YES;
+                if (endYaw - lastDeltaYaw > 0) {
+                    deltaYaw += M_PI / 180;
+                    if (deltaYaw >= endYaw) {
+                        [timer invalidate];
+                        weakSelf.isAnimating = NO;
+                    }
+                } else {
+                    deltaYaw -= M_PI / 180;
+                    if (deltaYaw <= endYaw) {
+                        [timer invalidate];
+                        weakSelf.isAnimating = NO;
+                    }
+                }
+            }];
+        }
+    } else {
+        deltaYaw = endYaw;
+    }
 }
 
 - (instancetype)init
@@ -160,8 +191,7 @@ GLint my_uniforms[NUM_UNIFORMS];
         }
     }
     currentYaw = yaw * M_PI / 180;
-    NSLog(@"yaw: %f", yaw);
-    matrix = GLKMatrix4RotateY(matrix, _fingerRotationX);
+    matrix = GLKMatrix4RotateY(matrix, deltaYaw);
     _view = GLKMatrix4Multiply(matrix, _camera);
 //    NSLog(@"--------------------------");
 //    NSLog(@"%f %f %f %f", eye.eyeViewMatrix.m00, eye.eyeViewMatrix.m01, eye.eyeViewMatrix.m02, eye.eyeViewMatrix.m03);
