@@ -12,6 +12,6 @@
 
 @interface Video360ViewController : HTY360PlayerVC
 
-- (void)reAnchorToDegree:(float)degree;
+- (void)reAnchorToDegree:(float)degree isAnimated:(BOOL)isAnimated;
 
 @end
